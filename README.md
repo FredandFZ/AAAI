@@ -131,7 +131,7 @@ Examples of privacy processing include:
 UHD-demo/
 ├── behaviors.tsv
 ├── impressions.tsv
-├── freelancer_meta.tsv
+├── freelancer_meta.jsonl
 ├── sample.py
 ├── figures/
 │   ├── toy.png
@@ -143,7 +143,7 @@ UHD-demo/
 |---|---|
 | `behaviors.tsv` | Timestamped employer–freelancer interaction logs. |
 | `impressions.tsv` | Ordered freelancer exposure lists for individual search sessions. |
-| `freelancer_meta.tsv` | Anonymized and cleaned freelancer profile metadata. |
+| `freelancer_meta.jsonl` | Anonymized and cleaned freelancer profile metadata. |
 | `sample.py` | Utility for constructing demo, UHD-5K, or UHD-50K subsets from UHD-full. |
 
 > Due to GitHub file-size limits, large data files are distributed through the repository's **Release Assets** rather than committed directly to the Git repository.
@@ -194,7 +194,7 @@ Each row corresponds to one search or recommendation session. Items in `impressi
 
 ### Freelancer Metadata
 
-File: `freelancer_meta.tsv`
+File: `freelancer_meta.jsonl`
 
 | Field | Type | Description |
 |---|---|---|
