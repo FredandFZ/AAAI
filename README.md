@@ -1,15 +1,15 @@
 # UHD: An E-Recruitment Recommendation Dataset for Impression-Aware Recommendation
 
-UHD (**Upwork Hiring Dataset**) is a large-scale e-recruitment recommendation dataset collected from the Upwork platform. It is designed to support research on **impression-aware recommendation**, **sequential recommendation**, **multi-behavior recommendation**, **item-level fairness**, and **conversion-rate prediction** in online hiring.
+UHD (**Upwork Hiring Dataset**) is a large-scale e-recruitment recommendation dataset collected from the Upwork platform. It is designed to support research on **impression-aware recommendation**, **sequential recommendation**, **multi-behavior recommendation**, **item-level fairness**, and **conversion-rate prediction** in online freelance marketplaces.
 
-Unlike conventional recommendation datasets that record only user–item interactions, UHD also records the freelancer profiles that were actually shown to each employer, the true on-screen order in which they appeared, and the behaviors that followed the exposure. This makes it possible to distinguish:
+Unlike conventional recommendation datasets that record only user–item interactions, UHD also records the freelancer profiles that were actually shown to each client, the true on-screen order in which they appeared, and the behaviors that followed the exposure. This makes it possible to distinguish:
 
 - an item that was **exposed but ignored**, and
 - an item that was **never exposed**.
 
 This distinction is important because treating every unobserved interaction as negative feedback can introduce exposure bias, selection bias, and popularity bias.
 
-> **Recommendation direction:** UHD models employers as users and freelancers as items. The primary task is to recommend suitable freelancer candidates to employers.
+> **Recommendation direction:** UHD models clients as users and freelancers as items. The primary task is to recommend suitable freelancers to clients.
 
 ---
 
@@ -38,8 +38,8 @@ Most recommender systems learn user preferences from historical interactions suc
 
 For example:
 
-- A freelancer profile was shown to an employer, but the employer did not click it.
-- Another freelancer profile was never shown to the employer.
+- A freelancer profile was shown to a client, but the client did not click it.
+- Another freelancer profile was never shown to the client.
 
 These two cases should not be treated as equivalent negative feedback. The first case contains evidence of exposure without interaction, while the second contains no direct preference signal.
 
@@ -47,19 +47,19 @@ UHD addresses this problem by linking each interaction to its exact exposure con
 
 ![How Impressions Influence User Interactions?](figures/toy.png)
 
-In UHD, an impression represents a single search session in which an employer is shown an ordered list of freelancer profiles. Each record preserves the true display order and indicates whether the employer clicked, invited, messaged, or hired any exposed freelancer.
+In UHD, an impression represents a single search session in which a client is shown an ordered list of freelancer profiles. Each record preserves the true display order and indicates whether the client clicked, invited, messaged, or hired any exposed freelancer.
 
 ---
 
 ## Key Features
 
 - **Real-world e-recruitment data** collected from the Upwork platform.
-- **Employer-to-freelancer recommendation**, rather than the more common job-to-job-seeker direction.
+- **Client-to-freelancer recommendation**, rather than the more common job-to-job-seeker direction.
 - **Rank-aware impressions** that preserve the true on-screen order of exposed freelancer profiles.
-- **Session-level exposure context**, independently logged for each employer and search session.
+- **Session-level exposure context**, independently logged for each client and search session.
 - **Four interaction types:** click, invite, message, and hire.
 - **Interaction–impression linkage** through `impression_id`.
-- **Anonymized freelancer profiles** with job titles, descriptions, skills, and availability information.
+- **Anonymized freelancer profile features** with skills, registration information, and availability information. The public metadata release excludes free-text `job_title` and `overview` fields.
 - **Multiple dataset scales:** UHD-full, UHD-50K, and UHD-5K.
 - Support for studying **recommendation accuracy, long-tail fairness, exposure bias, and delayed conversion feedback**.
 
@@ -69,7 +69,7 @@ In UHD, an impression represents a single search session in which an employer is
 
 | Statistic | UHD-full | UHD-50K | UHD-5K |
 |---|---:|---:|---:|
-| Users / employers | 228,595 | 50,000 | 5,000 |
+| Users / clients | 228,595 | 50,000 | 5,000 |
 | Items / freelancers | 178,407 | 156,241 | 57,015 |
 | Interactions | 7,730,713 | 1,697,797 | 209,622 |
 | Impressions | 6,024,820 | 1,326,560 | 137,944 |
@@ -103,7 +103,7 @@ A relatively stable platform period is selected to reduce the influence of major
 The cleaning process includes:
 
 - removing records that violate business logic;
-- filtering inactive employers and freelancers;
+- filtering inactive users and items;
 - detecting duplicated, corrupted, or incomplete records;
 - removing implausibly long impression sessions;
 - checking consistency between impression and interaction logs;
@@ -113,15 +113,7 @@ The filtering process is designed conservatively to preserve the original data d
 
 ### 3. Identifier Anonymization
 
-All employer, freelancer, and impression identifiers are anonymized. Free-text profile fields are processed to reduce re-identification risk while preserving useful semantic information.
-
-Examples of privacy processing include:
-
-- generalizing precise locations to the country level;
-- removing contact information;
-- replacing specific school names with coarse descriptions;
-- replacing specific employer names with coarse categories;
-- retaining non-sensitive text when no identifying information is detected.
+All client, freelancer, and impression identifiers are reindexed. Fields that may contain personally identifiable information (PII), including school names, precise locations, and contact information, are removed from the public release. The public `freelancer_meta.tsv` file also excludes the free-text `job_title` and `overview` fields.
 
 ---
 
@@ -132,6 +124,9 @@ UHD-demo/
 ├── behaviors.tsv
 ├── impressions.tsv
 ├── freelancer_meta.tsv
+├── behaviors-demo.tsv
+├── impressions-demo.tsv
+├── freelancer_meta-demo.tsv
 ├── sample.py
 ├── figures/
 │   ├── toy.png
@@ -141,11 +136,16 @@ UHD-demo/
 
 | File | Description |
 |---|---|
-| `behaviors.tsv` | Timestamped employer–freelancer interaction logs. |
-| `impressions.tsv` | Ordered freelancer exposure lists for individual search sessions. |
-| `freelancer_meta.tsv` | Anonymized and cleaned freelancer profile metadata. |
+| `behaviors.tsv` | Full timestamped client–freelancer interaction logs. |
+| `impressions.tsv` | Full ordered freelancer exposure lists for individual client search sessions. |
+| `freelancer_meta.tsv` | Public freelancer metadata in tab-separated-value format. Sensitive free-text fields are excluded. |
+| `behaviors-demo.tsv` | Small demonstration subset of the interaction data. |
+| `impressions-demo.tsv` | Small demonstration subset of the impression data. |
+| `freelancer_meta-demo.tsv` | Small demonstration subset of the freelancer metadata. |
 | `sample.py` | Utility for constructing demo, UHD-5K, or UHD-50K subsets from UHD-full. |
 
+> All released freelancer metadata use TSV format, including `freelancer_meta.tsv` and `freelancer_meta-demo.tsv`.
+>
 > Due to GitHub file-size limits, large data files are distributed through the repository's **Release Assets** rather than committed directly to the Git repository.
 
 ---
@@ -158,7 +158,7 @@ File: `behaviors.tsv`
 
 | Field | Type | Description |
 |---|---|---|
-| `user_id` | string / integer | Anonymized employer identifier. |
+| `user_id` | string / integer | Anonymized client identifier. |
 | `item_id` | string / integer | Anonymized freelancer identifier. |
 | `behavior_ts` | timestamp | Time at which the interaction occurred. |
 | `behavior_type` | integer | Interaction type: `1` click, `2` invite, `3` message, `4` hire. |
@@ -184,7 +184,7 @@ File: `impressions.tsv`
 | Field | Type | Description |
 |---|---|---|
 | `impression_id` | string / integer | Unique anonymized identifier for the impression session. |
-| `user_id` | string / integer | Anonymized employer who received the impression. |
+| `user_id` | string / integer | Anonymized client who received the impression. |
 | `impression_ts` | timestamp | Time at which the recommendation list was shown. |
 | `impressions` | string / list | Ordered list of exposed freelancers and their session behaviors. |
 
@@ -201,8 +201,10 @@ File: `freelancer_meta.tsv`
 | `item_id` | string / integer | Anonymized freelancer identifier. |
 | `registration_date` | date / timestamp | Date on which the freelancer profile was registered. |
 | `skill_tags` | list / string | Skills associated with the freelancer profile. |
-| `open_to_hire` | boolean / integer | Whether the freelancer is open to new hiring opportunities. |
+| `open_to_hire` | boolean / integer | Whether the freelancer profile is available for new opportunities. |
 | `available_hours` | numeric | Profile availability duration, measured in hours. |
+
+The public metadata files do not include the free-text `job_title` or `overview` fields. Both the full and demonstration metadata files are distributed as TSV files: `freelancer_meta.tsv` and `freelancer_meta-demo.tsv`.
 
 ---
 
@@ -264,7 +266,7 @@ def parse_impression_list(value: str) -> list[dict]:
 
 ## Loading the Data
 
-The following example loads the three TSV files with `pandas`.
+The following example loads the three full TSV files with `pandas`. To test the pipeline on the demonstration data, use the corresponding `*-demo.tsv` files.
 
 ```python
 from pathlib import Path
@@ -322,7 +324,7 @@ UHD can support several recommendation and e-recruitment research directions.
 
 ### 1. Sequential Recommendation
 
-Predict the next freelancer with whom an employer will interact from the employer's chronological behavior history.
+Predict the next freelancer with whom a client will interact from the client's chronological behavior history.
 
 Possible targets include:
 
@@ -339,7 +341,7 @@ This enables more faithful negative sampling and preference estimation.
 
 ### 3. Multi-Behavior Recommendation
 
-Model the progression among different employer behaviors:
+Model the progression among different client behaviors:
 
 ```text
 impression → click → invite/message → hire
@@ -347,9 +349,9 @@ impression → click → invite/message → hire
 
 The four behavior types can be treated as different levels of engagement or conversion.
 
-### 4. Candidate Ranking
+### 4. Freelancer Ranking
 
-Rank freelancer candidates for an employer while accounting for:
+Rank freelancer profiles for a client while accounting for:
 
 - historical interactions;
 - historical impressions;
@@ -380,7 +382,7 @@ Model interactions that occur after a delay, especially hires that may happen se
 
 ### 9. Content-Based Recommendation
 
-Use `job_title`, `overview`, `skill_tags`, and availability features to recommend freelancers when interaction histories are sparse.
+Use the released profile features, such as `skill_tags` and availability attributes, to recommend freelancers when interaction histories are sparse.
 
 ### 10. Generative Recommendation
 
@@ -416,7 +418,7 @@ The paper uses a chronological leave-one-out protocol for sequential recommendat
 - the second-latest interaction is used for validation;
 - earlier interactions are used for training.
 
-Full-sort evaluation is used, meaning that the model ranks the complete candidate set rather than a small set of sampled negatives.
+Full-sort evaluation is used, meaning that the model ranks the complete item set rather than a small set of sampled negatives.
 
 ### Ranking Metrics
 
@@ -447,9 +449,9 @@ Adding impression information improves ranking performance across all evaluated 
 
 Representative results include:
 
-- LightGCN obtains approximately 26% improvement in `HR@10`.
-- SASRec obtains a 21.19% improvement in `HR@5` on UHD-50K.
-- DiffuRec obtains a 24.76% improvement in `NDCG@5` on UHD-50K.
+- LightGCN obtains more than 26% improvement in `HR@10` on both UHD-5K and UHD-50K.
+- SASRec obtains an 18.88% improvement in `HR@5` on UHD-50K.
+- DiffuRec obtains a 28.0% improvement in `NDCG@5` on UHD-50K.
 
 The improvements suggest that historical exposure contains preference information that cannot be recovered from interaction logs alone.
 
@@ -474,37 +476,37 @@ Impression information also improves conversion prediction:
 | Impression → Click AUC | 0.76 | 0.81 |
 | Impression → Hire AUC | 0.60 | 0.65 |
 
-The gain on impression-to-hire prediction is particularly relevant because hiring decisions often involve longer feedback delays than clicks.
+The gain on impression-to-hire prediction is particularly relevant because client–freelancer engagement decisions often involve longer feedback delays than clicks.
 
 ---
 
 ## Data Quality, Privacy, and Ethics
 
-UHD is constructed from anonymized platform logs in accordance with Upwork's privacy and user-consent policies.
+UHD is constructed from platform interaction logs using identifier reindexing, data cleansing, and PII-removal procedures. The public metadata release excludes free-text `job_title` and `overview` fields.
 
-The dataset construction process includes:
+The dataset construction and validation process includes:
 
-- identifier anonymization;
-- personally identifiable information removal;
-- coarse generalization of schools, employers, and locations;
-- manual inspection of sampled records;
-- temporal consistency checks;
-- distribution and stability checks;
-- semantic validation between employer needs and interacted freelancer profiles.
+- reindexing client, freelancer, and impression identifiers;
+- removing fields that may contain personally identifiable information;
+- excluding sensitive free-text profile fields from the public metadata release;
+- manually inspecting sampled records;
+- checking temporal consistency between impressions and interactions;
+- validating data distributions and temporal stability;
+- checking semantic consistency between user queries and interacted items.
 
 Users of UHD should:
 
 - use the data only for legitimate research purposes;
-- avoid attempts to re-identify employers or freelancers;
+- avoid attempts to re-identify clients or freelancers;
 - follow the repository's license and data-use terms;
 - report aggregate results rather than exposing individual records;
-- consider fairness implications when developing hiring recommendation systems.
+- consider the implications of exposure distributions when developing recommendation systems.
 
 ---
 
 ## Scope and Limitations
 
-UHD is primarily a benchmark for recommendation and exposure modeling. It does not by itself provide a complete evaluation environment for an end-to-end hiring agent.
+UHD is primarily a benchmark for recommendation and exposure modeling. It does not by itself provide a complete evaluation environment for an end-to-end client–freelancer matching agent.
 
 For example, the released data do not directly evaluate whether an agent can:
 
@@ -512,9 +514,9 @@ For example, the released data do not directly evaluate whether an agent can:
 - decide when to search, inspect profiles, or ask follow-up questions;
 - reason about all client constraints;
 - negotiate with freelancers;
-- verify final work quality after hiring.
+- verify final work quality after a client–freelancer engagement.
 
-UHD can nevertheless serve as a strong component for candidate retrieval, ranking, readiness modeling, and hiring-conversion prediction in a broader agent benchmark.
+UHD can nevertheless serve as a strong component for freelancer retrieval, ranking, readiness modeling, and engagement-conversion prediction in a broader agent benchmark.
 
 The impression logs are observational platform data. Researchers should therefore remain cautious about causal conclusions, since exposure is influenced by the production recommendation system and platform policies.
 
