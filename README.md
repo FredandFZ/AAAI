@@ -1,6 +1,6 @@
-# UHD: An E-Recruitment Recommendation Dataset for Impression-Aware Recommendation
+# UHD: A Freelance Hiring Recommendation Dataset for Impression-Aware Recommendation
 
-UHD (**Upwork Hiring Dataset**) is a large-scale e-recruitment recommendation dataset collected from the Upwork platform. It is designed to support research on **impression-aware recommendation**, **sequential recommendation**, **multi-behavior recommendation**, **item-level fairness**, and **conversion-rate prediction** in online freelance marketplaces.
+UHD (**Upwork Hiring Dataset**) is a large-scale freelance hiring recommendation dataset collected from the Upwork platform. It is designed to support research on **impression-aware recommendation**, **sequential recommendation**, **multi-behavior recommendation**, **item-level fairness**, and **conversion-rate prediction** in online freelance marketplaces.
 
 Unlike conventional recommendation datasets that record only user–item interactions, UHD also records the freelancer profiles that were actually shown to each client, the true on-screen order in which they appeared, and the behaviors that followed the exposure. This makes it possible to distinguish:
 
@@ -53,7 +53,7 @@ In UHD, an impression represents a single search session in which a client is sh
 
 ## Key Features
 
-- **Real-world e-recruitment data** collected from the Upwork platform.
+- **Real-world freelance hiring data** collected from the Upwork platform.
 - **Client-to-freelancer recommendation**, rather than the more common job-to-job-seeker direction.
 - **Rank-aware impressions** that preserve the true on-screen order of exposed freelancer profiles.
 - **Session-level exposure context**, independently logged for each client and search session.
@@ -320,7 +320,7 @@ print(f"Interactions linked to an impression: {linked_ratio:.2%}")
 
 ## Supported Research Tasks
 
-UHD can support several recommendation and e-recruitment research directions.
+UHD can support several recommendation and freelance hiring research directions.
 
 ### 1. Sequential Recommendation
 
@@ -528,7 +528,7 @@ Citation information will be updated after publication.
 
 ```bibtex
 @inproceedings{uhd2026,
-  title     = {UHD: An E-Recruitment Recommendation Dataset for Impression-Aware Recommendation},
+  title     = {UHD: A Freelance Hiring Recommendation Dataset for Impression-Aware Recommendation},
   author    = {Anonymous},
   booktitle = {To appear},
   year      = {2026}
