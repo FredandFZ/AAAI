@@ -131,7 +131,7 @@ Examples of privacy processing include:
 UHD-demo/
 ├── behaviors.tsv
 ├── impressions.tsv
-├── freelancer_meta.jsonl
+├── freelancer_meta.tsv
 ├── sample.py
 ├── figures/
 │   ├── toy.png
@@ -143,7 +143,7 @@ UHD-demo/
 |---|---|
 | `behaviors.tsv` | Timestamped employer–freelancer interaction logs. |
 | `impressions.tsv` | Ordered freelancer exposure lists for individual search sessions. |
-| `freelancer_meta.jsonl` | Anonymized and cleaned freelancer profile metadata. |
+| `freelancer_meta.tsv` | Anonymized and cleaned freelancer profile metadata. |
 | `sample.py` | Utility for constructing demo, UHD-5K, or UHD-50K subsets from UHD-full. |
 
 > Due to GitHub file-size limits, large data files are distributed through the repository's **Release Assets** rather than committed directly to the Git repository.
@@ -194,14 +194,12 @@ Each row corresponds to one search or recommendation session. Items in `impressi
 
 ### Freelancer Metadata
 
-File: `freelancer_meta.jsonl`
+File: `freelancer_meta.tsv`
 
 | Field | Type | Description |
 |---|---|---|
 | `item_id` | string / integer | Anonymized freelancer identifier. |
 | `registration_date` | date / timestamp | Date on which the freelancer profile was registered. |
-| `job_title` | string | Professional title shown on the freelancer profile. |
-| `overview` | string | Anonymized self-introduction or profile overview. |
 | `skill_tags` | list / string | Skills associated with the freelancer profile. |
 | `open_to_hire` | boolean / integer | Whether the freelancer is open to new hiring opportunities. |
 | `available_hours` | numeric | Profile availability duration, measured in hours. |
